@@ -4,8 +4,6 @@ import java.sql.*;
 
 import bookstore.domain.user;
 import bookstore.util.JDBCutil;
-import org.apache.commons.dbutils.QueryRunner;
-import org.apache.commons.dbutils.handlers.BeanHandler;
 import java.sql.SQLException;
 
 
@@ -22,14 +20,13 @@ public class UserDao {
                 try {
                     PreparedStatement preparedStatement = connection.prepareStatement(
                             "insert into user (username,password,gender,email,telephone,introduce,active_code) values(?,?,?,?,?,?,?)");
-                    preparedStatement.setInt(1, user.getId());
-                    preparedStatement.setString(2, user.getUsername());
-                    preparedStatement.setString(3, user.getPassword());
-                    preparedStatement.setString(4, user.getGender());
-                    preparedStatement.setString(5, user.getEmail());
-                    preparedStatement.setString(6, user.getTelephone());
-                    preparedStatement.setString(7, user.getIntroduce());
-                    preparedStatement.setString(8, user.getActiveCode());
+                    preparedStatement.setString(1, user.getUsername());
+                    preparedStatement.setString(2, user.getPassword());
+                    preparedStatement.setString(3, user.getGender());
+                    preparedStatement.setString(4, user.getEmail());
+                    preparedStatement.setString(5, user.getTelephone());
+                    preparedStatement.setString(6, user.getIntroduce());
+                    preparedStatement.setString(7, user.getActiveCode());
 
                     preparedStatement.executeUpdate();
                 } catch (Exception e) {
@@ -37,57 +34,85 @@ public class UserDao {
                 }
                 return false;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return  false;
+        return false;
     }
 
     // 根据激活码查找用户
     public boolean findUserByActiveCode(String activeCode) throws SQLException {
         String sql = "select * from user where active_code=?";
-        try{
+        try {
             Connection connection = JDBCutil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet rs = preparedStatement.executeQuery();
             return rs.next();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return false;
     }
 
     // 激活用戶
     public void activeUser(String activeCode) throws SQLException {
         String sql = "update user set state=? where active_code=?";
-        try{
+        try {
             Connection connection = JDBCutil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1,1);
-            preparedStatement.setString(2,activeCode);
+            preparedStatement.setInt(1, 1);
+            preparedStatement.setString(2, activeCode);
             preparedStatement.executeUpdate();
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     //根据用户名与密码查找用户
     public user findUserByUsernameAndPassword(String username, String password) throws SQLException {
-        String sql="select * from user where username=? and password=?";
-        try{
+        String sql = "select * from user where username=? and password=?";
+        try {
             Connection connection = JDBCutil.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1,username);
-            preparedStatement.setString(2,password);
-
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs == null) {
+                return null;
+            }
+            user u = new user();
+            u.setActiveCode(rs.getString("active_code"));
+            return u;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        QueryRunner runner = new QueryRunner(DataSourceUtils.getDataSource());
-        return runner.query(sql, new BeanHandler<User>(User.class),username,password);
+        return null;
     }
 
     //根据用户id查找用户
-    public User findUserByUserid(int id) throws SQLException {
-        String sql="select * from user where id=?";
-        QueryRunner runner = new QueryRunner(DataSourceUtils.getDataSource());
-        return runner.query(sql, new BeanHandler<User>(User.class),id);
+    public user findUserByUserid(int id) throws SQLException {
+        String sql = "select * from user where id=?";
+        try {
+            Connection connection = JDBCutil.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            ResultSet rs = preparedStatement.executeQuery();
+            user u = new user();
+            u.setActiveCode(rs.getString("active_code"));
+            u.setId(rs.getInt("id"));
+            u.setEmail(rs.getString("email"));
+            u.setGender(rs.getString("gender"));
+            u.setTelephone(rs.getString("telephone"));
+            u.setIntroduce(rs.getString("introduce"));
+            u.setPassword(rs.getString("password"));
+            u.setRegistTime(rs.getTimestamp("regist_time"));
+            u.setRole(rs.getString("role"));
+            u.setUsername(rs.getString("username"));
+            u.setState(rs.getInt("state"));
+            return u;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
-
 }
