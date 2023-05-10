@@ -7,8 +7,8 @@
           <element id="module-output" name="lab" />
         </element>
         <element id="directory" name="lib">
-          <element id="library" level="project" name="mail" />
           <element id="library" level="project" name="lib" />
+          <element id="library" level="project" name="mail" />
         </element>
       </element>
       <element id="javaee-facet-resources" facet="lab/web/Web" />

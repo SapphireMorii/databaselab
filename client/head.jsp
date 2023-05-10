@@ -1,5 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ page import="cn.itcast.itcaststore.domain.User"%>
+<%@ page import="bookstore.domain.user"%>
 <script type="text/javascript">
 //退出确认框
 function confirm_logout() {   
@@ -28,7 +28,7 @@ function confirm_logout() {
 				| <a href="${pageContext.request.contextPath}/help">帮助中心</a> 
 				| <a href="${pageContext.request.contextPath}/myAccount">我的帐户</a>
 				<% 
-				User user = (User) request.getSession().getAttribute("user");
+				user user = (user) request.getSession().getAttribute("user");
 				if(null == user){
 				%>
 				| <a href="${pageContext.request.contextPath}/client/register.jsp">新用户注册</a>							
