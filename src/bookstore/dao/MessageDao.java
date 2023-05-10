@@ -17,7 +17,7 @@ public class MessageDao {
     // 前台系统，添加留言信息
     public void addHelpMessage(message help) throws SQLException {
         String sql = "insert into message(title,content,user_id,telephone,replycontent,send_time) values(?,?,?,?,?,?)";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         int row = runner.update(sql, help.getTitle(),help.getContent(),help.getUserid(),
                 help.getTelephone(),help.getReplycontent(),help.getSend_time());
         if (row == 0) {
@@ -29,7 +29,7 @@ public class MessageDao {
     public List<message> findMessageByuserid(int id) throws SQLException {
 
         String sql = "select * from message where user_id = ?";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         return runner.query(sql, new ResultSetHandler<List<message>>() {
             public List<message> handle(ResultSet rs) throws SQLException {
                 List<message> messages = new ArrayList<message>();
@@ -50,32 +50,32 @@ public class MessageDao {
     //后台系统，查询所有的留言
     public List<message> getAllMessages() throws SQLException {
         String sql = "select * from message";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         return runner.query(sql, new BeanListHandler<message>(message.class));
     }
     //后台系统，查询最新添加的留言信息
     public message getRecentMessage() throws SQLException {
         String sql = "select * from message";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         return runner.query(sql, new BeanHandler<message>(message.class));
     }
 
     //后台系统，根据id删除公告
     public void deleteMessage(String id) throws SQLException {
         String sql = "delete from message where id = ?";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         runner.update(sql, id);
     }
     //后台系统，根据id修改单个留言
     public void updateMessage(message n) throws SQLException {
         String sql = "update message set replycontent=? where id=?";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         runner.update(sql, n.getReplycontent(),n.getId());
     }
     //后台系统，根据id查找公告
     public message findMessageById(String id) throws SQLException {
         String sql = "select * from message where id = ?";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         return runner.query(sql, new BeanHandler<message>(message.class),id);
     }
 

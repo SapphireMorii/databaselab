@@ -36,7 +36,7 @@ public class OrderDao {
      */
     public List<orders> findOrderByUser(final user user) throws SQLException {
         String sql = "select * from orders where user_id=?";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         return runner.query(sql, new ResultSetHandler<List<orders>>() {
             public List<orders> handle(ResultSet rs) throws SQLException {
                 List<orders> orders = new ArrayList<orders>();
@@ -62,7 +62,7 @@ public class OrderDao {
      */
     public orders findOrderById(String id) throws SQLException {
         String sql = "select * from orders,user where orders.user_id=user.id and orders.id=?";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         return runner.query(sql, new ResultSetHandler<orders>() {
             public orders handle(ResultSet rs) throws SQLException {
                 orders order = new orders();
@@ -100,7 +100,7 @@ public class OrderDao {
         //1.创建sql
         String sql = "select orders.*,user.* from orders,user where user.id=orders.user_id order by orders.user_id";
         //2.创建QueryRunner对象
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         //3.返回QueryRunner对象query()方法的查询结果
         return runner.query(sql, new ResultSetHandler<List<orders>>() {
             public List<orders> handle(ResultSet rs) throws SQLException {
@@ -141,7 +141,7 @@ public class OrderDao {
      */
     public boolean updateOrderState(String id) throws SQLException {
         String sql = "update orders set paystate=1 where id=?";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         if(runner.update(sql, id)>0) {
             System.out.println(runner.update(sql, id));
             return true;
@@ -156,7 +156,7 @@ public class OrderDao {
      */
     public boolean updateOrderScore(double score, String id) throws SQLException {
         String sql = "update orders set score=? where id=?";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         if(runner.update(sql,score,id)>0) {
             System.out.println(runner.update(sql,score ,id));
             return true;
@@ -188,7 +188,7 @@ public class OrderDao {
         }
         sql += " order by orders.user_id";
         //4.创建QueryRunner对象
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         //5.返回QueryRunner对象query方法的执行结果
         return runner.query(sql, new ResultSetHandler<List<orders>>() {
             public List<orders> handle(ResultSet rs) throws SQLException {

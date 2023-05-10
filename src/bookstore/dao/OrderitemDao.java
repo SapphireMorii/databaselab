@@ -38,7 +38,7 @@ public class OrderitemDao {
             throws SQLException {
         String sql = "select * from orderItem,Products where products.id=orderItem.product_id and order_id=?";
 
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
 
         return runner.query(sql, new ResultSetHandler<List<orderitem>>() {
             public List<orderitem> handle(ResultSet rs) throws SQLException {
@@ -72,7 +72,7 @@ public class OrderitemDao {
             throws SQLException {
         String sql = "select * from orderItem,Products where products.id=orderItem.product_id and order_id=? and products.id=?";
 
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
 
         return runner.query(sql, new ResultSetHandler<List<orderitem>>() {
             public List<orderitem> handle(ResultSet rs) throws SQLException {

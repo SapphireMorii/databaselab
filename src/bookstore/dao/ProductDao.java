@@ -135,7 +135,7 @@ public class ProductDao {
     public List<Object[]> salesList(String year, String month)
             throws SQLException {
         String sql = "SELECT products.name,SUM(orderitem.buy_num) totalsalnum FROM orders,products,orderItem WHERE orders.id=orderItem.order_id AND products.id=orderItem.product_id AND orders.paystate=1 and year(ordertime)=? and month(ordertime)=? GROUP BY products.name ORDER BY totalsalnum DESC";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         return runner.query(sql, new ArrayListHandler(), year, month);
     }
 
@@ -146,7 +146,7 @@ public class ProductDao {
         List<Object> list = new ArrayList<Object>();
         String sql = "select * from products where 1=1 ";
 
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
 
         if (id != null && id.trim().length() > 0) {
             sql += " and id=?";
@@ -195,7 +195,7 @@ public class ProductDao {
         System.out.println(sql);
         System.out.println(obj);
         //3.创建QueryRunner对象
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         //4.使用QueryRunner对象的update()方法更新数据
         runner.update(sql, obj.toArray());
     }
@@ -227,7 +227,7 @@ public class ProductDao {
                 " GROUP BY products.id,products.name,products.img_url "+
                 " ORDER BY totalsalnum DESC "+
                 " LIMIT 0,2 ";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         return runner.query(sql, new ArrayListHandler());
     }
 
@@ -236,7 +236,7 @@ public class ProductDao {
                                         String searchfield) throws SQLException {
         //根据名字模糊查询图书
         String sql = "SELECT * FROM products WHERE name LIKE '%"+searchfield+"%' LIMIT ?,?";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
 //		//用于分页查询的数据
 //		Object obj = new Object[] { (currentPage - 1) * currentCount, currentCount };
         return runner.query(sql,
@@ -248,7 +248,7 @@ public class ProductDao {
     public int findBookByNameCategory(String searchfield,String category) throws SQLException {
         String sql = "SELECT COUNT(*) FROM products WHERE name LIKE '%"+searchfield+"%' "
                 + "and category=? ";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         //查询出满足条件的总数量，为long类型
         Long count = (Long)runner.query(sql, new ScalarHandler(),category);
         return count.intValue();
@@ -259,7 +259,7 @@ public class ProductDao {
         //根据名字模糊查询图书
         String sql = "SELECT * FROM products WHERE name LIKE '%"+searchfield+"%' "
                 + "and category=? LIMIT ?,?";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
 //			//用于分页查询的数据
 //			Object obj = new Object[] { (currentPage - 1) * currentCount, currentCount };
         return runner.query(sql,
@@ -270,7 +270,7 @@ public class ProductDao {
     //前台搜索框，根据书名模糊查询出的图书总数量
     public int findBookByNameAllCount(String searchfield) throws SQLException {
         String sql = "SELECT COUNT(*) FROM products WHERE name LIKE '%"+searchfield+"%'";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         //查询出满足条件的总数量，为long类型
         Long count = (Long)runner.query(sql, new ScalarHandler());
         return count.intValue();
@@ -279,13 +279,13 @@ public class ProductDao {
     //后台系统，根据id删除商品信息
     public void deleteProduct(String id) throws SQLException {
         String sql = "DELETE FROM products WHERE id = ?";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         runner.update(sql, id);
     }
     //根据name查询商品
     public products findProductByName(String name) throws SQLException {
         String sql = "select * from products where name=?";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         return runner.query(sql, new BeanHandler<products>(products.class), name);
     }
     /******  自加
@@ -298,7 +298,7 @@ public class ProductDao {
                 + "and products.name=?"
                 + " GROUP BY products.name "
                 + "ORDER BY totalsalnum DESC";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         return runner.query(sql, new ArrayListHandler(), year, month, name);
     }
     /******  自加
@@ -311,7 +311,7 @@ public class ProductDao {
                     + " GROUP BY products.name "
                     + "ORDER BY totalsalnum DESC";
             System.out.println("已找year==null&&month==null&&name==null&&category==null");
-            QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+            QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
             return runner.query(sql, new ArrayListHandler());
         }
         else if(year!=""&&month!=""&&name!=""){
@@ -323,7 +323,7 @@ public class ProductDao {
                     + " GROUP BY products.name "
                     + "ORDER BY totalsalnum DESC";
             System.out.println("已找year!=null&&month!=null&&name!=null");
-            QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+            QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
             return runner.query(sql, new ArrayListHandler(), year, month, name);
         }else if(year!=""&&month!=""&&category!=""){
             String sql = "SELECT products.name,SUM(orderitem.buy_num) totalsalnum FROM orders,products,orderItem "
@@ -334,7 +334,7 @@ public class ProductDao {
                     + " GROUP BY products.name "
                     + "ORDER BY totalsalnum DESC";
             System.out.println("已找year!=null&&month!=null&&category!=null");
-            QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+            QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
             return runner.query(sql, new ArrayListHandler(), year, month, category);
         }else if(year!=""&&month!=""){
             String sql = "SELECT products.name,SUM(orderitem.buy_num) totalsalnum FROM orders,products,orderItem "
@@ -343,7 +343,7 @@ public class ProductDao {
                     + "and month(ordertime)=? GROUP BY products.name "
                     + "ORDER BY totalsalnum DESC";
             System.out.println("已找year!=null&&month!=null");
-            QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+            QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
             return runner.query(sql, new ArrayListHandler(), year, month);
         }
         return null;

@@ -42,7 +42,7 @@ public class CommentDao {
     //根据用户查评论
     public List<comment> findCommentByUser(final comment comment) throws SQLException {
         String sql = "select * from comment where user_id=?";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         return runner.query(sql, new ResultSetHandler<List<comment>>() {
             public List<comment> handle(ResultSet rs) throws SQLException {
                 List<comment> comments = new ArrayList<comment>();
@@ -65,7 +65,7 @@ public class CommentDao {
     //根据订单号和商品号修改评论状态和内容
     public boolean updateCommentState(String oid,String pid,String content) throws SQLException {
         String sql = "update comment set comment_state=1,content=? where order_id=? and product_id=?";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         System.out.println(runner.update(sql, content, oid, pid));
         if(runner.update(sql, content, oid, pid)>0) {
             System.out.println(runner.update(sql, content, oid, pid));
@@ -78,7 +78,7 @@ public class CommentDao {
     //根据商品号查评论内容
     public List<comment> findCommentByPid(String pid) throws SQLException {
         String sql = "select * from comment where product_id=?";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         return runner.query(sql, new ResultSetHandler<List<comment>>() {
             public List<comment> handle(ResultSet rs) throws SQLException {
                 List<comment> comments = new ArrayList<comment>();
@@ -100,20 +100,20 @@ public class CommentDao {
     //后台系统，查询所有的公告
     public List<Object[]> getAllComments() throws SQLException {
         String sql = "select comment.id,comment.content,user.username,products.name from comment,user,products where comment.product_id=products.id and comment.user_id=user.id order by comment.id asc limit 0,10";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         return runner.query(sql, new ArrayListHandler());
     }
 
     //后台系统，根据id查找公告
     public comment findCommentById(String id) throws SQLException {
         String sql = "select * from comment where id = ?";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         return runner.query(sql, new BeanHandler<comment>(comment.class),id);
     }
     //后台系统，根据id删除公告
     public void deleteComment(String id) throws SQLException {
         String sql = "delete from comment where id = ?";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         runner.update(sql, id);
     }
 }

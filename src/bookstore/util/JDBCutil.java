@@ -1,32 +1,49 @@
 package bookstore.util;
 
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ResourceBundle;
+import java.sql.Connection;
 public class JDBCutil {
 
+    private static DataSource dataSource = new ComboPooledDataSource();
     static Connection conn = null;
     private static ThreadLocal<Connection> tl = new ThreadLocal<Connection>();
 
-    static {
-        ResourceBundle bundle = ResourceBundle.getBundle("jdbcConfig");
-        String driver = bundle.getString("driverManager");
-        String url = bundle.getString("url");
-        String user = bundle.getString("user");
-        String password = bundle.getString("password");
-        try{
-            Class.forName(driver);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        try{
-            conn = DriverManager.getConnection(url,user,password);
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+    public static DataSource getDataSource() {
+        return dataSource;
     }
-    public static Connection getConnection(){return conn;}
+
+    public static Connection getConnection() throws SQLException {
+        Connection con = tl.get();
+        if (con == null) {
+            con = dataSource.getConnection();
+            tl.set(con);
+        }
+        return con;
+    }
+//    static {
+//        ResourceBundle bundle = ResourceBundle.getBundle("jdbcConfig");
+//        String driver = bundle.getString("driverManager");
+//        String url = bundle.getString("url");
+//        String user = bundle.getString("user");
+//        String password = bundle.getString("password");
+//        try{
+//            Class.forName(driver);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//
+//        try{
+//            conn = DriverManager.getConnection(url,user,password);
+//        }catch (Exception e)
+//        {
+//            e.printStackTrace();
+//        }
+//    }
+//    public static Connection getConnection(){return conn;}
 
     public static void release(ResultSet set, Statement stmt, Connection connection) throws SQLException{
         if(set != null){

@@ -15,7 +15,7 @@ public class UserDao {
     // 添加用户
     public void addUser(user user) throws SQLException {
         String sql = "insert into user(username,password,gender,email,telephone,introduce,active_code) values(?,?,?,?,?,?,?)";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         int row = runner.update(sql, user.getUsername(), user.getPassword(),
                 user.getGender(), user.getEmail(), user.getTelephone(),
                 user.getIntroduce(), user.getActiveCode());
@@ -27,7 +27,7 @@ public class UserDao {
     // 根据激活码查找用户
     public user findUserByActiveCode(String activeCode) throws SQLException {
         String sql = "select * from user where active_code=?";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         return runner.query(sql, new BeanHandler<user>(user.class), activeCode);
     }
 

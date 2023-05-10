@@ -27,25 +27,25 @@ public class CollectionDao {
     public void addCollection(collection c) throws SQLException {
 
         String sql = "insert into collection(user_id,product_id) values(?,?)";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         runner.update(sql, c.getUser().getId(),c.getProduct().getId());
     }
     // 根据id查找商品
     public collection findCollectByProductId(String id) throws SQLException {
         String sql = "select * from collection where product_id=?";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         return runner.query(sql, new BeanHandler<collection>(collection.class), id);
     }
     // 根据id查找商品
     public collection findCollectById(String product_id,int user_id) throws SQLException {
         String sql = "select * from collection where product_id=? and user_id=?";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         return runner.query(sql, new BeanHandler<collection>(collection.class), product_id,user_id);
     }
     //根据user_id查找收藏品
     public List<collection> findCollectByUserId(final int id) throws SQLException {
         String sql = "select * from collection where user_id=?";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         return runner.query(sql, new ResultSetHandler<List<collection>>(){
             public List<collection> handle(ResultSet rs) throws SQLException{
                 List<collection> collections = new ArrayList<collection>();
@@ -69,7 +69,7 @@ public class CollectionDao {
     // 获取数据总条数
     public int findAllCount(int id) throws SQLException {
         String sql = "select count(*) from collection where user_id=?";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         Long count = (Long) runner.query(sql, new ScalarHandler(),id);
         return count.intValue();
     }
@@ -82,7 +82,7 @@ public class CollectionDao {
         sql = "select * from collection  where user_id=? limit ?,?";
         obj = new Object[] { id,(currentPage - 1) * currentCount,
                 currentCount, };
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         //return runner.query(sql, new BeanListHandler<collection>(collection.class),
         //obj);
         return runner.query(sql, new ResultSetHandler<List<collection>>(){
@@ -108,7 +108,7 @@ public class CollectionDao {
     //后台系统，根据id删除收藏品信息
     public void delCollectionById(String id) throws SQLException {
         String sql = "DELETE FROM collection WHERE product_id = ?";
-        QueryRunner runner = new QueryRunner((DataSource) JDBCutil.getConnection());
+        QueryRunner runner = new QueryRunner(JDBCutil.getDataSource());
         runner.update(sql, id);
     }
 }
