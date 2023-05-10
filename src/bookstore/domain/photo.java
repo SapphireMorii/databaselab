@@ -33,7 +33,7 @@ public class photo {
     }
     @Override
     public String toString() {
-        return "Photo [id=" + id + ", img=" + img + ", state=" + state + "]";
+        return "photo [id=" + id + ", img=" + img + ", state=" + state + "]";
     }
 
 }

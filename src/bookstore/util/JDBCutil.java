@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 public class JDBCutil {
 
     static Connection conn = null;
+    private static ThreadLocal<Connection> tl = new ThreadLocal<Connection>();
 
     static {
         ResourceBundle bundle = ResourceBundle.getBundle("jdbcConfig");
@@ -37,6 +38,37 @@ public class JDBCutil {
         if(connection != null)
         {
             connection.close();
+        }
+    }
+    /**
+     * 开启事务
+     * @throws SQLException
+     */
+    public static void startTransaction() throws SQLException {
+        Connection con = getConnection();
+        if (con != null)
+            con.setAutoCommit(false);
+    }
+    /**
+     * 从ThreadLocal中释放并且关闭Connection,并结束事务
+     * @throws SQLException
+     */
+    public static void releaseAndCloseConnection() throws SQLException {
+        Connection con = getConnection();
+        if (con != null) {
+            con.commit();
+            tl.remove();
+            con.close();
+        }
+    }
+    /**
+     * 事务回滚
+     * @throws SQLException
+     */
+    public static void rollback() throws SQLException {
+        Connection con = getConnection();
+        if (con != null) {
+            con.rollback();
         }
     }
 }

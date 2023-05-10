@@ -3,7 +3,7 @@ package bookstore.domain;
 public class message {
     @Override
     public String toString() {
-        return "Message [id=" + id + ", title=" + title + ", content=" + content + ", user_id=" + user_id
+        return "message [id=" + id + ", title=" + title + ", content=" + content + ", user_id=" + user_id
                 + ", telephone=" + telephone + ", replycontent=" + replycontent + ", send_time=" + send_time + "]";
     }
     private static final long serialVersionUID = 1L;
@@ -42,7 +42,7 @@ public class message {
     public int getUserid() {
         return user_id;
     }
-    public void setUsername(int user_id) {
+    public void setUserid(int user_id) {
         this.user_id = user_id;
     }
     public String getTelephone() {
