@@ -1,5 +1,7 @@
 package bookstore.util;
 
+
+
 import javax.mail.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -28,7 +30,7 @@ public class MailUtils {
         };
         Session session = Session.getInstance(props, auth);
         // 2.创建一个Message，它相当于是邮件内容
-        message message = new MimeMessage(session);
+        Message message = new MimeMessage(session);
         message.setFrom(new InternetAddress("1962811150@qq.com")); // 设置发送者
         message.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(email)); // 设置发送方式与接收者
         message.setSubject("用户激活");
