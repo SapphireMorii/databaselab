@@ -77,12 +77,12 @@ public class UserDao {
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, password);
             ResultSet rs = preparedStatement.executeQuery();
-            if (rs == null) {
-                return null;
+            if (rs.next()) {
+                user u = new user();
+                u.setActiveCode(rs.getString("active_code"));
+                return u;
             }
-            user u = new user();
-            u.setActiveCode(rs.getString("active_code"));
-            return u;
+            return null;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -97,19 +97,22 @@ public class UserDao {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, id);
             ResultSet rs = preparedStatement.executeQuery();
-            user u = new user();
-            u.setActiveCode(rs.getString("active_code"));
-            u.setId(rs.getInt("id"));
-            u.setEmail(rs.getString("email"));
-            u.setGender(rs.getString("gender"));
-            u.setTelephone(rs.getString("telephone"));
-            u.setIntroduce(rs.getString("introduce"));
-            u.setPassword(rs.getString("password"));
-            u.setRegistTime(rs.getTimestamp("regist_time"));
-            u.setRole(rs.getString("role"));
-            u.setUsername(rs.getString("username"));
-            u.setState(rs.getInt("state"));
-            return u;
+            if(rs.next())
+            {
+                user u = new user();
+                u.setActiveCode(rs.getString("active_code"));
+                u.setId(rs.getInt("id"));
+                u.setEmail(rs.getString("email"));
+                u.setGender(rs.getString("gender"));
+                u.setTelephone(rs.getString("telephone"));
+                u.setIntroduce(rs.getString("introduce"));
+                u.setPassword(rs.getString("password"));
+                u.setRegistTime(rs.getTimestamp("regist_time"));
+                u.setRole(rs.getString("role"));
+                u.setUsername(rs.getString("username"));
+                u.setState(rs.getInt("state"));
+            }
+            return null;
         } catch (Exception e) {
             e.printStackTrace();
         }

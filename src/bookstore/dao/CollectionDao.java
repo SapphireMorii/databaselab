@@ -12,7 +12,6 @@ import bookstore.domain.collection;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
-import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 
 
@@ -67,7 +66,7 @@ public class CollectionDao {
                 List<Collection> collections = new ArrayList<Collection>();
                 while(rs.next()){
                     Collection collection = new Collection();
-                    Product product = new Product();
+                    ProductDao product = new ProductDao();
                     User user = new User();
                     collection.setId(rs.getInt("id"));
                     product.setId(rs.getString("product_id"));
@@ -107,7 +106,7 @@ public class CollectionDao {
                 List<Collection> collections = new ArrayList<Collection>();
                 while(rs.next()){
                     Collection collection = new Collection();
-                    Product product = new Product();
+                    ProductDao product = new ProductDao();
                     User user = new User();
                     collection.setId(rs.getInt("id"));
                     product.setId(rs.getString("product_id"));
